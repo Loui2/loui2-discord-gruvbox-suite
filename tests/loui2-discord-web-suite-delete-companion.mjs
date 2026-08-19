@@ -50,6 +50,7 @@ const fixtureUrl = `http://127.0.0.1:${server.address().port}/channels/1/2`;
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "loui2-delete-companion-"));
 const chromium = spawn(process.env.CHROMIUM_BIN || "chromium", [
   "--headless", "--no-sandbox", "--disable-gpu", "--no-first-run", "--remote-debugging-port=0",
+  "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
   `--user-data-dir=${profile}`, fixtureUrl,
 ], {stdio:["ignore","ignore","pipe"]});
 let stderr="";chromium.stderr.on("data",chunk=>{stderr+=String(chunk)});

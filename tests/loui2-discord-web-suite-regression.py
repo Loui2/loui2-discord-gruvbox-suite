@@ -166,6 +166,7 @@ window.unsafeWindow = {
         chromium_args = [
             os.environ.get("CHROMIUM_BIN", "chromium"),
             "--headless", "--no-sandbox", "--disable-gpu",
+            "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
             f"--user-data-dir={profile}",
         ]
         if virtual_time_ms is None:

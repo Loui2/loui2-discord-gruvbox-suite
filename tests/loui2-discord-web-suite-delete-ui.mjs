@@ -27,7 +27,7 @@ const server=http.createServer((_req,res)=>{const body=Buffer.from(html);res.wri
 await new Promise((resolve,reject)=>{server.once("error",reject);server.listen(0,"127.0.0.1",resolve)});
 const origin=`http://127.0.0.1:${server.address().port}`;const fixtureUrl=`${origin}/channels/111111111111111111/222222222222222222`;
 const profile=fs.mkdtempSync(path.join(os.tmpdir(),"loui2-delete-ui-"));
-const chromium=spawn(process.env.CHROMIUM_BIN || "chromium",["--headless","--no-sandbox","--disable-gpu","--no-first-run","--remote-debugging-port=0",`--user-data-dir=${profile}`,fixtureUrl],{stdio:["ignore","ignore","pipe"]});
+const chromium=spawn(process.env.CHROMIUM_BIN || "chromium",["--headless","--no-sandbox","--disable-gpu","--no-first-run","--remote-debugging-port=0","--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",`--user-data-dir=${profile}`,fixtureUrl],{stdio:["ignore","ignore","pipe"]});
 let stderr="";chromium.stderr.on("data",c=>stderr+=String(c));const portFile=path.join(profile,"DevToolsActivePort");
 for(let i=0;i<120&&!fs.existsSync(portFile);i++)await new Promise(r=>setTimeout(r,50));if(!fs.existsSync(portFile))throw new Error(stderr);
 const [port]=fs.readFileSync(portFile,"utf8").trim().split(/\r?\n/);let target;

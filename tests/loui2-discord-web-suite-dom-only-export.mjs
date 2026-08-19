@@ -101,6 +101,7 @@ const fixtureUrl = `http://127.0.0.1:${server.address().port}/channels/111111111
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "loui2-dom-only-export-"));
 const chromium = spawn(process.env.CHROMIUM_BIN || "chromium", [
   "--headless", "--no-sandbox", "--disable-gpu", "--no-first-run", "--remote-debugging-port=0",
+  "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
   `--user-data-dir=${profile}`, fixtureUrl,
 ], { stdio: ["ignore", "ignore", "pipe"] });
 let stderr = "";

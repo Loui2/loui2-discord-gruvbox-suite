@@ -38,6 +38,9 @@ def validate_userscript(text: str) -> None:
     raw_url = f"https://raw.githubusercontent.com/{REPO}/main/tampermonkey/{USERSCRIPT.name}"
     require(text.count(raw_url) == 2, "userscript update/download URLs are missing or duplicated")
     require("// @license      MIT" in text, "userscript MIT metadata is missing")
+    require("Original Gruvbox Sharp: Copyright (c) 2026 Liang Zhang." in text, "userscript original copyright is missing")
+    require("Permission is hereby granted, free of charge" in text, "userscript MIT permission notice is missing")
+    require("THE SOFTWARE IS PROVIDED \"AS IS\"" in text, "userscript MIT warranty disclaimer is missing")
 
     node = shutil.which("node")
     if node is None:
@@ -61,6 +64,14 @@ def validate_revenge(text: str) -> None:
     require(data.get("spec") == 2, "Revenge theme must use spec 2")
     require([author.get("name") for author in data.get("authors", [])] == ["round-panda", "Loui2"], "Revenge attribution is wrong")
     require("adaptation of Gruvbox Sharp by round-panda" in data.get("description", ""), "Revenge description is missing attribution")
+    require(data.get("source") == f"https://github.com/{REPO}", "Revenge source points elsewhere")
+    require(data.get("originalSource") == "https://github.com/round-panda/gruvbox-sharp", "Revenge original source is missing")
+    license_data = data.get("license")
+    require(isinstance(license_data, dict), "Revenge standalone license notice is missing")
+    require(license_data.get("name") == "MIT", "Revenge license name is wrong")
+    require(license_data.get("originalCopyright") == "Copyright (c) 2026 Liang Zhang", "Revenge original copyright is missing")
+    require("Permission is hereby granted" in license_data.get("permissionNotice", ""), "Revenge MIT permission notice is missing")
+    require("THE SOFTWARE IS PROVIDED AS IS" in license_data.get("warrantyDisclaimer", ""), "Revenge MIT disclaimer is missing")
 
     semantic = data.get("semanticColors")
     raw = data.get("rawColors")

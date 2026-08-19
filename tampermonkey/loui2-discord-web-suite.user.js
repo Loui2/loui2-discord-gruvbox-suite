@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Loui2 Discord Web suite
 // @namespace    loui2
-// @version      2.7.32
+// @version      2.7.33
 // IMPORTANT: Always bump @version whenever ANY change is made. No exceptions.
 // @description  Gruvbox theme, workspace controls, browser-shortcut release, rendered-message export, mobile layout, tab titles, and invisible typing for Discord Web.
 // @homepageURL  https://github.com/Loui2/loui2-discord-gruvbox-suite
@@ -28,10 +28,36 @@
 // @connect      127.0.0.1
 // ==/UserScript==
 
+/*
+ * The embedded Gruvbox Sharp theme portions are based on the original work by
+ * round-panda: https://github.com/round-panda/gruvbox-sharp
+ *
+ * Original Gruvbox Sharp: Copyright (c) 2026 Liang Zhang.
+ * Modifications and userscript integration: Copyright (c) 2026 Loui2.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 (() => {
   "use strict";
 
-  const VERSION = "2.7.32";
+  const VERSION = "2.7.33";
   const RUNTIME_KEY = "__loui2DiscordWebSuiteRuntime";
   const BROWSER_SHORTCUT_BROKER_KEY = "__loui2DiscordBrowserShortcutBroker";
   const DELETE_COMPANION_BASE_URL = "http://127.0.0.1:18766";

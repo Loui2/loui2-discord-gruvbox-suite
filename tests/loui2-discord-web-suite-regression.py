@@ -164,7 +164,8 @@ window.unsafeWindow = {
     )
     try:
         chromium_args = [
-            "chromium", "--headless", "--no-sandbox", "--disable-gpu",
+            os.environ.get("CHROMIUM_BIN", "chromium"),
+            "--headless", "--no-sandbox", "--disable-gpu",
             f"--user-data-dir={profile}",
         ]
         if virtual_time_ms is None:
@@ -213,7 +214,7 @@ class SuiteMetadataTests(unittest.TestCase):
 
         required_metadata = [
             "// @name         Loui2 Discord Web suite",
-            "// @version      2.7.32",
+            "// @version      2.7.33",
             "// @match        https://discord.com/*",
             "// @run-at       document-start",
             "// @sandbox      raw",
@@ -283,7 +284,7 @@ class SuiteMetadataTests(unittest.TestCase):
 
     def test_delete_ui_is_local_channel_scoped_and_trusted_two_step(self):
         source = SUITE.read_text()
-        self.assertIn('const VERSION = "2.7.32";', source)
+        self.assertIn('const VERSION = "2.7.33";', source)
         self.assertIn('function createMessageDeletionControl()', source)
         self.assertIn('function readNormalizedDeleteCount(input)', source)
         self.assertIn('createSuiteMenuOption("delete-mine", "Delete my recent messages...", "menuitem"', source)
@@ -1413,7 +1414,7 @@ document.getElementById('result').textContent=JSON.stringify({
         )
         self.assertEqual(
             state,
-            {"status": 204, "readyState": 4, "network": 0, "marker": "2.7.32"},
+            {"status": 204, "readyState": 4, "network": 0, "marker": "2.7.33"},
         )
 
 
@@ -1634,7 +1635,7 @@ document.getElementById('result').textContent=JSON.stringify({
                 "typingStatus": 204,
                 "typingNetwork": 0,
                 "blockedCount": "1",
-                "runtimeVersion": "2.7.32",
+                "runtimeVersion": "2.7.33",
             },
         )
 

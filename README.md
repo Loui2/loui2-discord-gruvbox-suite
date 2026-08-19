@@ -24,6 +24,8 @@ The userscript includes matching `@downloadURL` and `@updateURL` metadata so Tam
 
 The message-deletion control depends on a separate local companion service bound to `127.0.0.1`. That service is not distributed by this repository. Without it, deletion requests fail locally and safely; the userscript does not send deletion requests to a third-party service.
 
+The Tampermonkey and BetterDiscord desktop versions import IBM Plex from Google Fonts. Loading either desktop theme therefore sends ordinary font-request metadata, such as IP address and user agent, to Google.
+
 ## BetterDiscord installation
 
 Download:
@@ -48,7 +50,7 @@ The Revenge version reproduces the Gruvbox palette using Android semantic and ra
 
 ## Maintenance model
 
-This Git working tree is the canonical source for all three artifacts. The compatibility paths on Loui2's development host point back to these files rather than holding independent copies. Platform-specific implementations intentionally differ, but no separate publication copies are maintained.
+This Git working tree is the canonical source for all three published artifacts. Platform-specific implementations intentionally differ, but no separate publication copies are maintained.
 
 Run the repository validator before publishing:
 

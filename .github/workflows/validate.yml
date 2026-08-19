@@ -11,9 +11,22 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
-      - name: Validate published artifacts
+      - id: setup-chrome
+        uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2
+        with:
+          chrome-version: stable
+          install-dependencies: true
+      - name: Validate artifacts and syntax
         run: python3 scripts/validate.py
+      - name: Run userscript regression and browser tests
+        env:
+          CHROMIUM_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+        run: |
+          python3 tests/loui2-discord-web-suite-regression.py
+          node --test tests/loui2-discord-web-suite-delete-companion.mjs
+          node --test tests/loui2-discord-web-suite-delete-ui.mjs
+          node --test tests/loui2-discord-web-suite-dom-only-export.mjs

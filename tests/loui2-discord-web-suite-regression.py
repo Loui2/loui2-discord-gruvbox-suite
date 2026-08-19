@@ -34,6 +34,8 @@ def run_browser_fixture(
     defer_gm_get_tab=False,
 ):
     source = source_override if source_override is not None else SUITE.read_text()
+    # Browser fixtures test local behavior, not third-party font delivery.
+    source = re.sub(r'@import\s+url\(["\']https://fonts\.googleapis\.com/[^;]+;', '', source)
     if "</script>" in source.lower():
         raise AssertionError("suite source cannot be embedded in the browser fixture")
 

@@ -149,10 +149,11 @@ try {
     returnByValue: true,
     expression: `(async()=>{
       const delay=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
-      for(let attempt=0;attempt<100&&!window.__loui2DiscordWebSuiteRuntime;attempt+=1)await delay(20);
+      for(let attempt=0;attempt<100&&(!window.__loui2DiscordWebSuiteRuntime||!document.querySelector('[data-loui2-control="menu"]'));attempt+=1)await delay(20);
       const labels=[...window.__gmMenus.values()].map(entry=>entry.label);
       const rendered= [...window.__gmMenus.values()].find(entry=>entry.label==='Export Discord: currently rendered messages');
       document.querySelector('[data-loui2-control="menu"]')?.click();
+      for(let attempt=0;attempt<100&&!(document.querySelector('[data-loui2-delete-count] input')&&document.querySelector('[data-loui2-option="delete-mine"]'));attempt+=1)await delay(20);
       const deleteRegistered=Boolean(document.querySelector('[data-loui2-delete-count] input')&&document.querySelector('[data-loui2-option="delete-mine"]'));
       const startup={gmRequests:window.__gmHttpCalls.length,fetchCalls:window.__fetchCalls.length,xhrCalls:window.__xhrCalls.length};
       if(!rendered)return {labels,missingRendered:true,deleteRegistered,startup};

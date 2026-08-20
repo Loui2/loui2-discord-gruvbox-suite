@@ -14,9 +14,19 @@ https://raw.githubusercontent.com/Loui2/loui2-discord-gruvbox-suite/main/revenge
 
 In Discord Android, open **Settings → Revenge → Themes**, tap **+**, paste the URL, install the theme, and select it.
 
+### Optional channel-label companion plugin
+
+Revenge theme tokens are shared between ordinary channel rows and thread rows. To color ordinary guild channels orange without also recoloring threads or category names, install the companion plugin under **Settings → Revenge → Plugins → +**:
+
+```text
+https://raw.githubusercontent.com/Loui2/loui2-discord-gruvbox-suite/main/revenge/channel-labels/
+```
+
+Enable **Loui2 Gruvbox Channel Labels** and reload Discord. The plugin targets guild text, voice, announcement, stage, forum, and media channels. It deliberately excludes categories, direct messages, public threads, private threads, announcement threads, and unknown future channel types.
+
 ## Scope
 
-The Android client uses React Native rather than desktop Discord's HTML/CSS interface. This port reproduces the Gruvbox palette for backgrounds, text, controls, status colors, cards, chat input, and overlays. Desktop-only CSS behavior such as exact font sizing, sharp corners, hover selectors, and channel-only selectors cannot be represented by Revenge's standard color-theme format.
+The Android client uses React Native rather than desktop Discord's HTML/CSS interface. This port reproduces the Gruvbox palette for backgrounds, text, controls, status colors, cards, chat input, and overlays. Desktop-only CSS behavior such as exact font sizing, sharp corners, hover selectors, and channel-only selectors cannot be represented by Revenge's standard color-theme format; the optional companion plugin supplies the channel-only behavior.
 
 ## Credits
 

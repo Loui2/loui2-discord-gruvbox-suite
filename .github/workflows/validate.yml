@@ -28,7 +28,11 @@ jobs:
           unzip -q "$archive" -d "$install_dir"
           echo "CHROMIUM_BIN=$install_dir/chrome-headless-shell-linux64/chrome-headless-shell" >> "$GITHUB_ENV"
       - name: Validate artifacts and syntax
-        run: python3 scripts/validate.py
+        run: |
+          node scripts/build-revenge-channel-labels.mjs
+          git diff --exit-code -- revenge/channel-labels/index.js revenge/channel-labels/manifest.json
+          python3 scripts/validate.py
+          node --test tests/revenge-channel-labels.test.cjs
       - name: Run userscript regression and browser tests
         run: |
           python3 tests/loui2-discord-web-suite-regression.py

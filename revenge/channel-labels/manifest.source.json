@@ -1,0 +1,10 @@
+{
+  "name": "Loui2 Gruvbox Channel Labels",
+  "description": "Colors ordinary guild channel names Gruvbox orange while leaving threads and categories unchanged.",
+  "authors": [
+    {
+      "name": "Loui2"
+    }
+  ],
+  "main": "index.js"
+}

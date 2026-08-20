@@ -10,7 +10,7 @@ This is a modified work, not the original Gruvbox Sharp release. See [NOTICE.md]
 | --- | --- | --- |
 | Tampermonkey on Discord Web | [`tampermonkey/loui2-discord-web-suite.user.js`](tampermonkey/loui2-discord-web-suite.user.js) | Gruvbox styling plus browser workspace controls, typography controls, message tools, mobile layout, tab titles, and invisible typing |
 | BetterDiscord | [`betterdiscord/Loui2GruvboxSharp.theme.css`](betterdiscord/Loui2GruvboxSharp.theme.css) | Visual theme only |
-| Revenge on Android | [`revenge/theme.json`](revenge/theme.json) | Native Android color-theme adaptation |
+| Revenge on Android | [`revenge/theme.json`](revenge/theme.json) + optional [`revenge/channel-labels/`](revenge/channel-labels/) companion plugin | Native Android color-theme adaptation with precisely scoped channel-name coloring |
 
 ## Tampermonkey installation
 
@@ -47,6 +47,14 @@ https://raw.githubusercontent.com/Loui2/loui2-discord-gruvbox-suite/main/revenge
 ```
 
 The Revenge version reproduces the Gruvbox palette using Android semantic and raw color mappings. React Native does not support the desktop theme's CSS selectors, exact typography, or sharp-corner rules.
+
+For orange ordinary channel names without recoloring threads or categories, also install the companion plugin under **Discord Settings → Revenge → Plugins → +**:
+
+```text
+https://raw.githubusercontent.com/Loui2/loui2-discord-gruvbox-suite/main/revenge/channel-labels/
+```
+
+The theme deliberately keeps shared channel/thread color tokens neutral. The companion plugin patches Discord's channel-name renderer and applies orange only to guild text, voice, announcement, stage, forum, and media channels.
 
 ## Maintenance model
 

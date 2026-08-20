@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the three published Discord customization artifacts."""
+"""Validate the published Discord customization artifacts."""
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import shutil
@@ -13,6 +14,11 @@ ROOT = Path(__file__).resolve().parents[1]
 USERSCRIPT = ROOT / "tampermonkey/loui2-discord-web-suite.user.js"
 BETTERDISCORD = ROOT / "betterdiscord/Loui2GruvboxSharp.theme.css"
 REVENGE = ROOT / "revenge/theme.json"
+REVENGE_PLUGIN = ROOT / "revenge/channel-labels/index.js"
+REVENGE_PLUGIN_MANIFEST = ROOT / "revenge/channel-labels/manifest.json"
+REVENGE_PLUGIN_README = ROOT / "revenge/channel-labels/README.md"
+REVENGE_PLUGIN_SOURCE = ROOT / "revenge/channel-labels/src/index.cjs"
+REVENGE_README = ROOT / "revenge/README.md"
 README = ROOT / "README.md"
 LICENSE = ROOT / "LICENSE"
 NOTICE = ROOT / "NOTICE.md"
@@ -76,9 +82,8 @@ def validate_revenge(text: str) -> None:
     semantic = data.get("semanticColors")
     raw = data.get("rawColors")
     require(isinstance(semantic, dict) and bool(semantic), "semanticColors is missing")
-    require(semantic.get("CHANNELS_DEFAULT") == ["#d79921"], "Revenge channel labels must use Gruvbox orange")
-    require(semantic.get("REDESIGN_CHANNEL_NAME_TEXT") == ["#d79921"], "Revenge redesigned channel labels must use Gruvbox orange")
-    require(semantic.get("REDESIGN_CHANNEL_CATEGORY_NAME_TEXT") == ["#a89984"], "Revenge category labels must remain muted")
+    require(semantic.get("CHANNELS_DEFAULT") == ["#a89984"], "Revenge shared channel/thread labels must remain neutral")
+    require("REDESIGN_CHANNEL_NAME_TEXT" not in semantic, "Revenge theme must not globally recolor channel and thread names")
     require(isinstance(raw, dict) and bool(raw), "rawColors is missing")
     for key, values in semantic.items():
         require(isinstance(values, list) and bool(values), f"semantic color {key} has no values")
@@ -87,8 +92,39 @@ def validate_revenge(text: str) -> None:
         require(isinstance(value, str) and HEX_COLOR.fullmatch(value) is not None, f"raw color {key} is invalid")
 
 
+def validate_revenge_plugin(manifest_text: str, bundle: bytes, source: str) -> None:
+    manifest = json.loads(manifest_text)
+    require(manifest.get("name") == "Loui2 Gruvbox Channel Labels", "Revenge plugin name is wrong")
+    require(manifest.get("main") == "index.js", "Revenge plugin main file is wrong")
+    require([author.get("name") for author in manifest.get("authors", [])] == ["Loui2"], "Revenge plugin attribution is wrong")
+    require(manifest.get("hash") == hashlib.sha256(bundle).hexdigest(), "Revenge plugin hash is stale")
+    require(b"?." not in bundle, "Revenge plugin bundle must remain compatible with Hermes ES2015 parsing")
+    require("new Set([0, 2, 5, 13, 15, 16])" in source, "Revenge plugin ordinary-channel allowlist changed")
+    require("{ color: ORANGE }" in source, "Revenge plugin orange label style is missing")
+    require("ChannelInfo" in source, "Revenge plugin channel renderer patch is missing")
+
+    node = shutil.which("node")
+    if node is None:
+        raise AssertionError("node is required for Revenge plugin syntax validation")
+    for path in (REVENGE_PLUGIN_SOURCE, REVENGE_PLUGIN):
+        result = subprocess.run([node, "--check", str(path)], capture_output=True, text=True)
+        require(result.returncode == 0, f"Revenge plugin syntax failed for {path.relative_to(ROOT)}:\n{result.stderr}")
+
+
 def main() -> None:
-    required = [USERSCRIPT, BETTERDISCORD, REVENGE, README, LICENSE, NOTICE]
+    required = [
+        USERSCRIPT,
+        BETTERDISCORD,
+        REVENGE,
+        REVENGE_PLUGIN,
+        REVENGE_PLUGIN_MANIFEST,
+        REVENGE_PLUGIN_README,
+        REVENGE_PLUGIN_SOURCE,
+        REVENGE_README,
+        README,
+        LICENSE,
+        NOTICE,
+    ]
     for path in required:
         require(path.is_file(), f"required file is missing: {path.relative_to(ROOT)}")
 
@@ -99,18 +135,24 @@ def main() -> None:
     validate_userscript(texts[USERSCRIPT])
     validate_css(texts[BETTERDISCORD])
     validate_revenge(texts[REVENGE])
+    validate_revenge_plugin(
+        texts[REVENGE_PLUGIN_MANIFEST],
+        REVENGE_PLUGIN.read_bytes(),
+        texts[REVENGE_PLUGIN_SOURCE],
+    )
 
     root_readme = texts[README]
     for relative in (
         "tampermonkey/loui2-discord-web-suite.user.js",
         "betterdiscord/Loui2GruvboxSharp.theme.css",
         "revenge/theme.json",
+        "revenge/channel-labels/",
     ):
         require(f"https://raw.githubusercontent.com/{REPO}/main/{relative}" in root_readme, f"README URL is missing: {relative}")
 
     require("Copyright (c) 2026 Liang Zhang" in texts[LICENSE], "LICENSE lost the original copyright")
     require("originally created by [round-panda]" in texts[NOTICE], "NOTICE lost original creator attribution")
-    print("Validated Tampermonkey userscript, BetterDiscord CSS, Revenge JSON, URLs, license, and attribution.")
+    print("Validated Tampermonkey, BetterDiscord, Revenge theme/plugin, URLs, license, and attribution.")
 
 
 if __name__ == "__main__":

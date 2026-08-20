@@ -1,6 +1,8 @@
 "use strict";
 
 // SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Loui2
+// Source: https://github.com/Loui2/loui2-discord-gruvbox-suite
 
 const ORANGE = "#d79921";
 // New Discord channel types stay neutral until they are proven not to be thread-like.

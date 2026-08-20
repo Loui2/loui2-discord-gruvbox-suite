@@ -84,6 +84,7 @@ def validate_revenge(text: str) -> None:
     require(isinstance(semantic, dict) and bool(semantic), "semanticColors is missing")
     require(semantic.get("CHANNELS_DEFAULT") == ["#a89984"], "Revenge shared channel/thread labels must remain neutral")
     require("REDESIGN_CHANNEL_NAME_TEXT" not in semantic, "Revenge theme must not globally recolor channel and thread names")
+    require(semantic.get("REDESIGN_CHANNEL_CATEGORY_NAME_TEXT") == ["#a89984"], "Revenge category labels must remain muted")
     require(isinstance(raw, dict) and bool(raw), "rawColors is missing")
     for key, values in semantic.items():
         require(isinstance(values, list) and bool(values), f"semantic color {key} has no values")
@@ -99,6 +100,8 @@ def validate_revenge_plugin(manifest_text: str, bundle: bytes, source: str) -> N
     require([author.get("name") for author in manifest.get("authors", [])] == ["Loui2"], "Revenge plugin attribution is wrong")
     require(manifest.get("hash") == hashlib.sha256(bundle).hexdigest(), "Revenge plugin hash is stale")
     require(b"?." not in bundle, "Revenge plugin bundle must remain compatible with Hermes ES2015 parsing")
+    require(b"Copyright (c) 2026 Loui2" in bundle, "Revenge plugin standalone copyright is missing")
+    require(f"https://github.com/{REPO}".encode() in bundle, "Revenge plugin standalone source URL is missing")
     require("new Set([0, 2, 5, 13, 15, 16])" in source, "Revenge plugin ordinary-channel allowlist changed")
     require("{ color: ORANGE }" in source, "Revenge plugin orange label style is missing")
     require("ChannelInfo" in source, "Revenge plugin channel renderer patch is missing")

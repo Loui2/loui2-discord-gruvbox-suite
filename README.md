@@ -58,12 +58,15 @@ The theme deliberately keeps shared channel/thread color tokens neutral. The com
 
 ## Maintenance model
 
-This Git working tree is the canonical source for all three published artifacts. Platform-specific implementations intentionally differ, but no separate publication copies are maintained.
+This Git working tree is the canonical source for every published artifact. Platform-specific implementations intentionally differ, but no separate publication copies are maintained.
 
-Run the repository validator before publishing:
+Run the full local publication preflight before publishing:
 
 ```bash
+node scripts/build-revenge-channel-labels.mjs
+git diff --exit-code -- revenge/channel-labels/index.js revenge/channel-labels/manifest.json
 python3 scripts/validate.py
+node --test tests/revenge-channel-labels.test.cjs
 ```
 
 ## Attribution

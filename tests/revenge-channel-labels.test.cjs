@@ -33,11 +33,29 @@ test("eligible channel labels preserve existing style and append orange", () => 
     cloneElement: (element, props) => ({ ...element, props: { ...element.props, ...props } }),
   };
 
-  const result = colorOrdinaryChannelLabel(React, [{ channel: { type: 0 } }], rendered);
+  const result = colorOrdinaryChannelLabel(React, [{ channel: { type: 0, name: "general" } }], rendered);
 
   assert.notEqual(result, rendered);
   assert.deepEqual(result.props.style, [rendered.props.style, { color: ORANGE }]);
   assert.equal(result.props.children, "general");
+});
+
+test("eligible channel labels are colored inside the ChannelInfo wrapper", () => {
+  const icon = { type: "Icon", props: {} };
+  const label = { type: "Text", props: { style: { opacity: 0.8 }, children: "general" } };
+  const rendered = { type: "View", props: { style: { flex: 1 }, children: [icon, label] } };
+  const React = {
+    isValidElement: (element) => Boolean(element && element.type),
+    cloneElement: (element, props) => ({ ...element, props: { ...element.props, ...props } }),
+  };
+
+  const result = colorOrdinaryChannelLabel(React, [{ channel: { type: 0, name: "general" } }], rendered);
+
+  assert.notEqual(result, rendered);
+  assert.equal(result.props.style, rendered.props.style);
+  assert.equal(result.props.children[0], icon);
+  assert.notEqual(result.props.children[1], label);
+  assert.deepEqual(result.props.children[1].props.style, [label.props.style, { color: ORANGE }]);
 });
 
 test("thread, category, and invalid rendered rows are returned untouched", () => {
@@ -55,7 +73,7 @@ test("thread, category, and invalid rendered rows are returned untouched", () =>
 
 test("plugin patches ChannelInfo on load and unpatches on unload", () => {
   const channelInfo = { default() {} };
-  const rendered = { props: { style: { opacity: 0.8 } } };
+  const rendered = { props: { style: { opacity: 0.8 }, children: "voice" } };
   const React = {
     isValidElement: (element) => element === rendered,
     cloneElement: (element, props) => ({ ...element, props: { ...element.props, ...props } }),
@@ -83,7 +101,7 @@ test("plugin patches ChannelInfo on load and unpatches on unload", () => {
 
   const plugin = createPlugin(vendetta);
   plugin.onLoad();
-  const colored = patch([{ channel: { type: 2 } }], rendered);
+  const colored = patch([{ channel: { type: 2, name: "voice" } }], rendered);
   assert.deepEqual(colored.props.style, [rendered.props.style, { color: ORANGE }]);
 
   plugin.onUnload();
@@ -110,14 +128,15 @@ test("published bundle and manifest are installable and preserve channel scoping
   assert.equal(manifest.hash, hash);
 
   const channelInfo = { default() {} };
-  const rendered = { props: { style: { opacity: 1 } } };
+  const label = { type: "Text", props: { style: { opacity: 1 }, children: "general" } };
+  const rendered = { type: "View", props: { children: [{ type: "Icon", props: {} }, label] } };
   let patch;
   const vendetta = {
     metro: {
       findByName: () => channelInfo,
       common: {
         React: {
-          isValidElement: (element) => element === rendered,
+          isValidElement: (element) => Boolean(element && element.type),
           cloneElement: (element, props) => ({ ...element, props: { ...element.props, ...props } }),
         },
       },
@@ -133,8 +152,8 @@ test("published bundle and manifest are installable and preserve channel scoping
   const plugin = Function("vendetta", `return ${bundle}`)(vendetta);
   plugin.onLoad();
 
-  const channel = patch([{ channel: { type: 0 } }], rendered);
-  const thread = patch([{ channel: { type: 11 } }], rendered);
-  assert.deepEqual(channel.props.style, [rendered.props.style, { color: ORANGE }]);
+  const channel = patch([{ channel: { type: 0, name: "general" } }], rendered);
+  const thread = patch([{ channel: { type: 11, name: "thread" } }], rendered);
+  assert.deepEqual(channel.props.children[1].props.style, [label.props.style, { color: ORANGE }]);
   assert.equal(thread, rendered);
 });

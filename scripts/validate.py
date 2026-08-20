@@ -77,6 +77,8 @@ def validate_revenge(text: str) -> None:
     raw = data.get("rawColors")
     require(isinstance(semantic, dict) and bool(semantic), "semanticColors is missing")
     require(semantic.get("CHANNELS_DEFAULT") == ["#d79921"], "Revenge channel labels must use Gruvbox orange")
+    require(semantic.get("REDESIGN_CHANNEL_NAME_TEXT") == ["#d79921"], "Revenge redesigned channel labels must use Gruvbox orange")
+    require(semantic.get("REDESIGN_CHANNEL_CATEGORY_NAME_TEXT") == ["#a89984"], "Revenge category labels must remain muted")
     require(isinstance(raw, dict) and bool(raw), "rawColors is missing")
     for key, values in semantic.items():
         require(isinstance(values, list) and bool(values), f"semantic color {key} has no values")

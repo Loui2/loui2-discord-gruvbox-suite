@@ -18,7 +18,7 @@ https://raw.githubusercontent.com/Loui2/loui2-discord-gruvbox-suite/main/revenge
 
 Enable **Loui2 Gruvbox Channel Labels** and reload Discord.
 
-For plugin updates, leave automatic updates enabled and fully restart Discord. Revenge compares the manifest hash and fetches the changed bundle during startup. If automatic updates were disabled for this plugin, remove it and add the same URL again.
+For plugin updates, leave automatic updates enabled and fully restart Discord. Revenge compares the manifest hash and fetches the changed bundle during startup. If automatic updates are disabled or an immediate update is needed, open the plugin details and use **Refetch**, then reload Discord. Remove and add the same URL again only if Refetch fails or the installation is stale or corrupt.
 
 Paste the directory URL exactly as shown. Revenge appends `manifest.json`; the base URL is not intended to open as a standalone browser page.
 

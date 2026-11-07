@@ -35,6 +35,7 @@ jobs:
           node --test tests/revenge-channel-labels.test.cjs
       - name: Run userscript regression and browser tests
         run: |
+          node --test tests/betterdiscord-image-editor.test.mjs
           python3 tests/loui2-discord-web-suite-regression.py
           node --test tests/loui2-discord-web-suite-delete-companion.mjs
           node --test tests/loui2-discord-web-suite-delete-ui.mjs

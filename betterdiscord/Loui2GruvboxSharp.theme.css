@@ -1,7 +1,7 @@
 /**
  * @name Loui2 Gruvbox Sharp
  * @author round-panda (original), Loui2 (modifications)
- * @version 1.0.0
+ * @version 1.0.1
  * @description A modified edition of Gruvbox Sharp by round-panda, adding Loui2's typography, channel-label, and readability refinements. Requires Discord Dark Mode.
  * @authorLink https://github.com/round-panda
  * @source https://github.com/Loui2/loui2-discord-gruvbox-suite/tree/main/betterdiscord
@@ -881,9 +881,8 @@ div[class*=mentioned_]::before {
   color: #f9f5d7 !important;
 }
 
-div[class*=overlay_] {
-  background-color: #282828 !important;
-}
+/* Preserve native overlay transparency, including avatar/banner crop previews.
+   Generic overlay_* classes are not necessarily opaque theme surfaces. */
 
 div[class*=newMessagesBar_] {
   background-color: #076678 !important;
